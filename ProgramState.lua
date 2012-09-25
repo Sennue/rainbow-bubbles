@@ -1,5 +1,6 @@
 module  ( ..., package.seeall )
 require ( "Database" )
+require ( "Log" )
 
 local DEFAULT_SCREEN_SIZE   = 1024
 local DEFAULT_ASPECT_RATIO  = 9 / 16
@@ -110,6 +111,9 @@ function new ( pTitle, pLandscape, pPortrait, pFPS, pDebug )
   result.title     = pTitle or "test"
   result.debug     = pDebug or false
 
+  -- Log
+  Log.init ( result.debug )
+
   -- Screen Resolution
   result.landscape = pLandscape
   result.portrait  = pPortrait
@@ -120,7 +124,7 @@ function new ( pTitle, pLandscape, pPortrait, pFPS, pDebug )
 
   -- Simulator Window
   MOAISim.openWindow ( result.title, result.horizontalResolution, result.verticalResolution )
-  print              ( result.title, result.horizontalResolution, result.verticalResolution )
+  Log.print          ( result.title, result.horizontalResolution, result.verticalResolution )
 
   -- Viewport
   local adjustHeight = true

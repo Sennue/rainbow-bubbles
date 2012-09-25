@@ -14,7 +14,7 @@ CREATE TABLE IF NOT EXISTS dummy (
 -- Dummy View
 DROP VIEW IF EXISTS dummy_view;
 CREATE VIEW IF NOT EXISTS dummy_view AS
-  SELECT MAX ( id ) + 1 AS next_id FROM dummy;
+  SELECT MAX ( id ) + 1 AS id FROM dummy;
 
 
 ----------------------------------------------------------------
