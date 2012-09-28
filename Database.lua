@@ -1,3 +1,24 @@
+----------------------------------------------------------------
+--
+--  Database.lua
+--  This is a database module built on top of Lua-sqlite3 and
+--  Moai.  When opening databases, they will automatically be
+--  copied to the right place if necessary.
+--
+--  Written in 2012 by Brendan A R Sechter <bsechter@sennue.com>
+--
+--  To the extent possible under law, the author(s) have
+--  dedicated all copyright and related and neighboring rights
+--  to this software to the public domain worldwide. This
+--  software is distributed without any warranty.
+--
+--  You should have received a copy of the CC0 Public Domain
+--  Dedication along with this software. If not, see
+--  <http://creativecommons.org/publicdomain/zero/1.0/>.
+--
+----------------------------------------------------------------
+
+
 module ( ..., package.seeall )
 require "sqlite3"
 
@@ -24,7 +45,11 @@ function getCopyFilenameAndPath ( pFilename, pPath, pUserDatabase )
   -- iOS
   elseif "iOS" == MOAIEnvironment.osBrand then
     copyFilename = filename
-    copyPath     = MOAIEnvironment.documentDirectory .. "/"
+    if pUserDatabase then
+      copyPath   = MOAIEnvironment.documentDirectory .. "/"
+    else
+      copyPath   = path
+    end
 
   -- Other
   else
