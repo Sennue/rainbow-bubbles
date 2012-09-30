@@ -1,6 +1,26 @@
+----------------------------------------------------------------
+--
+--  main.lua
+--  This is the top level module that is ultimately responsible
+--  for calling all the other modules in the project.
+--
+--  Written in 2012 by Brendan A R Sechter <bsechter@sennue.com>
+--
+--  To the extent possible under law, the author(s) have
+--  dedicated all copyright and related and neighboring rights
+--  to this software to the public domain worldwide. This
+--  software is distributed without any warranty.
+--
+--  You should have received a copy of the CC0 Public Domain
+--  Dedication along with this software. If not, see
+--  <http://creativecommons.org/publicdomain/zero/1.0/>.
+--
+----------------------------------------------------------------
+
 require "ProgramState"
 require "Database"
 require "Log"
+require "SplashScreens"
 
 ProgramState.initialize ( )
 
@@ -8,60 +28,22 @@ ProgramState.initialize ( )
 local title     = "Rainbow Bubbles"
 local fps       = 60
 local debug     = true
-local landscape = true
+local landscape = false
 local portrait  = not landscape
 local state     = ProgramState.new ( title, landscape, portrait, fps, debug )
-
-function testDb ( pDb, pWrite )
-  local query, row, next_id, stmt
-
-  query = "SELECT * FROM dummy"
-  row   = pDb:queryRows ( query )
-  Log.print ( query, row, row [ 1 ] .id )
-  row   = pDb:queryFirstRow ( query )
-  Log.print ( query, row, row.id )
-
-  query   = "SELECT * FROM dummy_view"
-  next_id = pDb:queryValue ( query )
-  Log.print ( query, next_id )
-
-  if pWrite then
-    query = "INSERT INTO dummy ( id, name, amount ) VALUES ( ?, 'insert', ? )"
-    pDb:exec ( query:gsub ( "?", next_id ) )
-    stmt  = pDb:prepare ( query )
-    pDb:bindExec ( stmt, { next_id + 1, next_id + 1 } )
-
-    query = "SELECT * FROM dummy_view"
-    row   = pDb:queryValue ( query )
-    Log.print ( query, row )
-  end
-
-  query = "SELECT * FROM dummy WHERE ?=id"
-  stmt  = pDb:prepare ( query )
-  row   = pDb:bindRows ( stmt, { 2 } )
-  Log.print ( query, row, row [ 1 ] .id )
-  row   = pDb:bindFirstRow ( stmt, { 2 } )
-  Log.print ( query, row, row.id )
-
-  query = "SELECT COUNT ( * ) FROM dummy_view WHERE ?=id"
-  stmt  = pDb:prepare ( query )
-  row   = pDb:bindValue ( stmt, { next_id } )
-  Log.print ( query, row, row )
-end
 
 -- Main Loop
 function loop ( pProgramState )
   -- Splash Screens
+  SplashScreens.loop ( )
 
-  Log.print ( "--- SYSTEM DB ---" )
-  testDb ( state.systemDb, false )
-  Log.print ( "--- USER DB ---" )
-  testDb ( state.userDb,   true  )
-
+  -- Main Loop
   while not pProgramState.done do
     -- Loop
-    state:exit ( )
+    coroutine.yield ( )
   end
+
+  -- Exit
   state:exit ( )
 end
 

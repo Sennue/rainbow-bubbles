@@ -18,7 +18,6 @@
 --
 ----------------------------------------------------------------
 
-
 module ( ..., package.seeall )
 require "sqlite3"
 
@@ -30,6 +29,14 @@ local DEFAULT_PATH     = "./"
 local THIS_PACKAGE = package.loaded[...]
 function __index ( pTable, pKey )
   return THIS_PACKAGE [ pKey ]
+end
+
+function bool ( pValue )
+  if pValue then
+    return 1
+  end
+  -- else
+  return 0
 end
 
 function getCopyFilenameAndPath ( pFilename, pPath, pUserDatabase )
