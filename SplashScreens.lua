@@ -22,6 +22,7 @@ require "ProgramState"
 require "Database"
 require "Input"
 require "Log"
+require "FullScreenImage"
 
 -- State Variables
 local mDone

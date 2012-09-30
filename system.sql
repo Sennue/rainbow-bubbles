@@ -32,6 +32,15 @@ CREATE TABLE IF NOT EXISTS splash_screens (
   PRIMARY KEY ( priority, portrait, resolution )
 );
 
+-- Loading Screens
+DROP TABLE IF EXISTS loading_screens;
+CREATE TABLE IF NOT EXISTS loading_screens (
+  resolution   INTEGER,
+  portrait     INTEGER,
+  image        VARCHAR ( 32 ),
+  PRIMARY KEY ( resolution, portrait, image )
+);
+
 -- Supported Screen Resolutions
 DROP TABLE IF EXISTS texture_resolution_list;
 CREATE TABLE IF NOT EXISTS texture_resolution_list (
@@ -85,6 +94,12 @@ INSERT INTO splash_screens ( resolution, portrait, priority, image, display_time
 INSERT INTO splash_screens ( resolution, portrait, priority, image, display_time, fade_time ) VALUES (  512, 1, 1, "splash_sennue_vertical@2048.png",   2.00, 0.50 );
 INSERT INTO splash_screens ( resolution, portrait, priority, image, display_time, fade_time ) VALUES (  512, 1, 2, "splash_moai_vertical@2048.png",     2.00, 0.50 );
 INSERT INTO splash_screens ( resolution, portrait, priority, image, display_time, fade_time ) VALUES (  512, 1, 9, "fade.png",                          0.00, 0.50 );
+
+-- Loading Screens
+INSERT INTO loading_screens ( resolution, portrait, image ) VALUES ( 2048, 0, "loading@2048.png" );
+INSERT INTO loading_screens ( resolution, portrait, image ) VALUES ( 2048, 1, "loading@2048.png" );
+INSERT INTO loading_screens ( resolution, portrait, image ) VALUES ( 1024, 1, "loading@2048.png" );
+INSERT INTO loading_screens ( resolution, portrait, image ) VALUES (  512, 1, "loading@2048.png" );
 
 -- List of Texture Resolutions
 INSERT INTO texture_resolution_list ( resolution ) VALUES (  512 );

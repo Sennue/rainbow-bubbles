@@ -21,6 +21,7 @@ require "ProgramState"
 require "Database"
 require "Log"
 require "SplashScreens"
+require "Loading"
 
 ProgramState.initialize ( )
 
@@ -36,6 +37,7 @@ local state     = ProgramState.new ( title, landscape, portrait, fps, debug )
 function loop ( pProgramState )
   -- Splash Screens
   SplashScreens.loop ( )
+  Loading.loop ( )
 
   -- Main Loop
   while not pProgramState.done do
