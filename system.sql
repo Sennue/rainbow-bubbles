@@ -54,55 +54,46 @@ DROP VIEW IF EXISTS min_texture_resolution;
 CREATE VIEW IF NOT EXISTS min_texture_resolution AS
         SELECT MIN ( resolution ) AS resolution FROM texture_resolution_list;
 
--- Dummy Table
-DROP TABLE IF EXISTS dummy;
-CREATE TABLE IF NOT EXISTS dummy (
-  id     INTEGER,
-  name   VARCHAR ( 16 ),
-  amount INTEGER DEFAULT  1,
-  PRIMARY KEY ( id, name )
-);
-
--- Dummy View
-DROP VIEW IF EXISTS dummy_view;
-CREATE VIEW IF NOT EXISTS dummy_view AS
-  SELECT MAX ( id ) + 1 AS id FROM dummy;
-
-
 ----------------------------------------------------------------
 -- Data
 ----------------------------------------------------------------
 
-INSERT INTO dummy ( id, name, amount ) VALUES ( 1, "a", 1 );
-INSERT INTO dummy ( id, name, amount ) VALUES ( 2, "b", 2 );
-INSERT INTO dummy ( id, name, amount ) VALUES ( 3, "c", 3 );
-
 -- Splash Screens
-INSERT INTO splash_screens ( resolution, portrait, priority, image, display_time, fade_time ) VALUES ( 2048, 0, 0, "fade.png",                          0.00, 0.50 );
-INSERT INTO splash_screens ( resolution, portrait, priority, image, display_time, fade_time ) VALUES ( 2048, 0, 1, "splash_sennue_horizontal@2048.png", 2.00, 0.50 );
-INSERT INTO splash_screens ( resolution, portrait, priority, image, display_time, fade_time ) VALUES ( 2048, 0, 2, "splash_moai_horizontal@2048.png",   2.00, 0.50 );
-INSERT INTO splash_screens ( resolution, portrait, priority, image, display_time, fade_time ) VALUES ( 2048, 0, 9, "fade.png",                          0.00, 0.50 );
-INSERT INTO splash_screens ( resolution, portrait, priority, image, display_time, fade_time ) VALUES ( 2048, 1, 0, "fade.png",                          0.00, 0.50 );
-INSERT INTO splash_screens ( resolution, portrait, priority, image, display_time, fade_time ) VALUES ( 2048, 1, 1, "splash_sennue_vertical@2048.png",   2.00, 0.50 );
-INSERT INTO splash_screens ( resolution, portrait, priority, image, display_time, fade_time ) VALUES ( 2048, 1, 2, "splash_moai_vertical@2048.png",     2.00, 0.50 );
-INSERT INTO splash_screens ( resolution, portrait, priority, image, display_time, fade_time ) VALUES ( 2048, 1, 9, "fade.png",                          0.00, 0.50 );
-INSERT INTO splash_screens ( resolution, portrait, priority, image, display_time, fade_time ) VALUES ( 1024, 1, 0, "fade.png",                          0.00, 0.50 );
-INSERT INTO splash_screens ( resolution, portrait, priority, image, display_time, fade_time ) VALUES ( 1024, 1, 1, "splash_sennue_vertical@2048.png",   2.00, 0.50 );
-INSERT INTO splash_screens ( resolution, portrait, priority, image, display_time, fade_time ) VALUES ( 1024, 1, 2, "splash_moai_vertical@2048.png",     2.00, 0.50 );
-INSERT INTO splash_screens ( resolution, portrait, priority, image, display_time, fade_time ) VALUES ( 1024, 1, 9, "fade.png",                          0.00, 0.50 );
-INSERT INTO splash_screens ( resolution, portrait, priority, image, display_time, fade_time ) VALUES (  512, 1, 0, "fade.png",                          0.00, 0.50 );
-INSERT INTO splash_screens ( resolution, portrait, priority, image, display_time, fade_time ) VALUES (  512, 1, 1, "splash_sennue_vertical@2048.png",   2.00, 0.50 );
-INSERT INTO splash_screens ( resolution, portrait, priority, image, display_time, fade_time ) VALUES (  512, 1, 2, "splash_moai_vertical@2048.png",     2.00, 0.50 );
-INSERT INTO splash_screens ( resolution, portrait, priority, image, display_time, fade_time ) VALUES (  512, 1, 9, "fade.png",                          0.00, 0.50 );
+INSERT INTO splash_screens ( resolution, portrait, priority, image ) VALUES ( 2048, 0, 0, "fade"                     );
+INSERT INTO splash_screens ( resolution, portrait, priority, image ) VALUES ( 2048, 0, 1, "splash_sennue_horizontal" );
+INSERT INTO splash_screens ( resolution, portrait, priority, image ) VALUES ( 2048, 0, 2, "splash_moai_horizontal"   );
+INSERT INTO splash_screens ( resolution, portrait, priority, image ) VALUES ( 2048, 0, 9, "fade"                     );
+INSERT INTO splash_screens ( resolution, portrait, priority, image ) VALUES ( 2048, 1, 0, "fade"                     );
+INSERT INTO splash_screens ( resolution, portrait, priority, image ) VALUES ( 2048, 1, 1, "splash_sennue_vertical"   );
+INSERT INTO splash_screens ( resolution, portrait, priority, image ) VALUES ( 2048, 1, 2, "splash_moai_vertical"     );
+INSERT INTO splash_screens ( resolution, portrait, priority, image ) VALUES ( 2048, 1, 9, "fade"                     );
+
+-- Splash Screen Dynamically Generated Values
+INSERT INTO splash_screens ( resolution, portrait, priority, image )
+  SELECT 1024 AS resolution, portrait, priority, image FROM splash_screens
+  UNION
+  SELECT  512 AS resolution, portrait, priority, image FROM splash_screens;
+UPDATE splash_screens SET display_time = 2.00, fade_time = 0.50 WHERE 'fade' <> image;
+UPDATE splash_screens SET display_time = 0.00, fade_time = 0.50 WHERE 'fade' = image;
+--UPDATE splash_screens SET image = image || '@' || resolution WHERE 'fade' <> image;
+UPDATE splash_screens SET image = image || '@2048' WHERE 'fade' <> image;
+UPDATE splash_screens SET image = image || '.png';
 
 -- Loading Screens
-INSERT INTO loading_screens ( resolution, portrait, image ) VALUES ( 2048, 0, "loading@2048.png" );
-INSERT INTO loading_screens ( resolution, portrait, image ) VALUES ( 2048, 1, "loading@2048.png" );
-INSERT INTO loading_screens ( resolution, portrait, image ) VALUES ( 1024, 1, "loading@2048.png" );
-INSERT INTO loading_screens ( resolution, portrait, image ) VALUES (  512, 1, "loading@2048.png" );
+INSERT INTO loading_screens ( resolution, portrait, image ) VALUES ( 2048, 0, "loading" );
+INSERT INTO loading_screens ( resolution, portrait, image ) VALUES ( 2048, 1, "loading" );
+
+-- Loading Screen Dynamically Generated Values
+INSERT INTO loading_screens ( resolution, portrait, image )
+  SELECT 1024 AS resolution, portrait, image FROM loading_screens
+  UNION
+  SELECT  512 AS resolution, portrait, image FROM loading_screens;
+--UPDATE loading_screens SET image = image || '@' || resolution WHERE 'fade' <> image;
+UPDATE loading_screens SET image = image || '@2048' WHERE 'fade' <> image;
+UPDATE loading_screens SET image = image || '.png';
 
 -- List of Texture Resolutions
-INSERT INTO texture_resolution_list ( resolution ) VALUES (  512 );
-INSERT INTO texture_resolution_list ( resolution ) VALUES ( 1024 );
 INSERT INTO texture_resolution_list ( resolution ) VALUES ( 2048 );
+INSERT INTO texture_resolution_list ( resolution ) VALUES ( 1024 );
+INSERT INTO texture_resolution_list ( resolution ) VALUES (  512 );
 
